@@ -1,4 +1,4 @@
-function double_pendulum_sim_1()
+function double()
 
 %INPUT
 m1 = input('Enter mass m1 (kg): ');
@@ -15,9 +15,9 @@ g = 9.81;
 y0 = [theta1_0; omega1_0; theta2_0; omega2_0];
 
 %TIME SETTINGS
-t_final = 10;          
-dt = 0.1;            
-tspan = 0:dt:t_final;  
+t_final = 10;
+dt = 0.1;
+tspan = 0:dt:t_final;
 
 %SOLVE SYSTEM
 opts = odeset('RelTol',1e-10, 'AbsTol',1e-10);
@@ -43,8 +43,8 @@ alpha1 = zeros(size(t));
 alpha2 = zeros(size(t));
 for i = 1:length(t)
     dydt_i = equations([], y(i,:)', m1, m2, L1, L2, g);
-    alpha1(i) = dydt_i(2);  
-    alpha2(i) = dydt_i(4);  
+    alpha1(i) = dydt_i(2);
+    alpha2(i) = dydt_i(4);
 end
 a1 = L1 * alpha1;
 a2 = sqrt( ...
@@ -55,9 +55,9 @@ a2 = sqrt( ...
 T = 0.5 * m1 .* v1.^2 + 0.5 * m2 .* v2.^2;
 
 % Potential Energy
-y1_pos = -L1 * cos(theta1);  
-y2_pos = y1_pos - L2 * cos(theta2);  
-V = -m1 * g * y1_pos - m2 * g * y2_pos;
+y1_pos = -L1 * cos(theta1);
+y2_pos = y1_pos - L2 * cos(theta2);
+V = m1 * g * y1_pos + m2 * g * y2_pos;
 
 %ANIMATION
 figure('Color', 'w');
@@ -133,14 +133,14 @@ den1 = (m1 + m2) * L1 - m2 * L1 * cos(delta)^2;
 den2 = (L2 / L1) * den1;
 
 domega1 = (m2 * L1 * omega1^2 * sin(delta) * cos(delta) + ...
-           m2 * g * sin(theta2) * cos(delta) + ...
-           m2 * L2 * omega2^2 * sin(delta) - ...
-           (m1 + m2) * g * sin(theta1)) / den1;
+    m2 * g * sin(theta2) * cos(delta) + ...
+    m2 * L2 * omega2^2 * sin(delta) - ...
+    (m1 + m2) * g * sin(theta1)) / den1;
 
 domega2 = (-m2 * L2 * omega2^2 * sin(delta) * cos(delta) + ...
-           (m1 + m2) * g * sin(theta1) * cos(delta) - ...
-           (m1 + m2) * L1 * omega1^2 * sin(delta) - ...
-           (m1 + m2) * g * sin(theta2)) / den2;
+    (m1 + m2) * g * sin(theta1) * cos(delta) - ...
+    (m1 + m2) * L1 * omega1^2 * sin(delta) - ...
+    (m1 + m2) * g * sin(theta2)) / den2;
 
 dydt = [omega1; domega1; omega2; domega2];
 end
